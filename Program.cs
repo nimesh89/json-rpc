@@ -1,6 +1,7 @@
 ﻿using StreamJsonRpc;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
@@ -20,12 +21,18 @@ namespace ConsoleApp1
                 using (var wsh = new WebSocketMessageHandler(ws, formatter))
                 using (JsonRpc rpc = new JsonRpc(wsh))
                 {
+                    var consoleTracer = new ConsoleTraceListener();
+                    consoleTracer.Filter = new EventTypeFilter(SourceLevels.All);
+
+                    var tr = new TraceSource("test");
+                    tr.Listeners.Clear();
+                    tr.Listeners.Add(consoleTracer);
+                    rpc.TraceSource = tr;
+
                     Uri serverUri = new Uri("wss://app.sensemetrics.com:4201");
                     ws.ConnectAsync(serverUri, CancellationToken.None).Wait();
 
                     rpc.Disconnected += Rpc_Disconnected;
-                    
-
                     rpc.StartListening();
                 }
             }
