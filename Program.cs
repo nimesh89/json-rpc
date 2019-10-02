@@ -24,6 +24,7 @@ namespace ConsoleApp1
                     ws.ConnectAsync(serverUri, CancellationToken.None).Wait();
 
                     rpc.Disconnected += Rpc_Disconnected;
+                    
 
                     rpc.StartListening();
                 }
@@ -33,6 +34,7 @@ namespace ConsoleApp1
                 Console.WriteLine(ex.Message);
                 Console.WriteLine(ex.StackTrace);
             }
+            Console.ReadLine();
         }
 
         private static void Rpc_Disconnected(object sender, JsonRpcDisconnectedEventArgs e)
